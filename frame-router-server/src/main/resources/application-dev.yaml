@@ -2,16 +2,19 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: router
       auto-offset-reset: latest
       session-timeout-ms: 5000
       heartbeat-interval-ms: 2000
       max-poll-interval-ms: 10000
 
-session:
+router:
+  region: A
+  name: B
   kafka:
     authentication:
       username: admin
       password: admin
+    consumer:
+      topic: voices
   login-timeout: 30000
   heartbeat-timeout: 300000

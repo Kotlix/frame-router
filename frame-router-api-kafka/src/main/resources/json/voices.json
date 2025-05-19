@@ -3,23 +3,60 @@
   "title": "VoiceNotification",
   "type": "object",
   "required": [
-    "communityId",
-    "chatId",
-    "senderId",
-    "textContent"
+    "logicalInfo",
+    "action",
+    "serverInfo"
   ],
   "properties": {
-    "communityId": {
-      "type": "integer"
+    "logicalInfo": {
+      "title": "LogicalInfo",
+      "type": "object",
+      "required": [
+        "communityId",
+        "voiceId",
+        "userId"
+      ],
+      "properties": {
+        "communityId": {
+          "type": "integer"
+        },
+        "voiceId": {
+          "type": "integer"
+        },
+        "targetId": {
+          "type": "integer"
+        },
+        "listenerIds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
     },
-    "chatId": {
-      "type": "integer"
+    "action": {
+      "type": "string",
+      "enum": [
+        "JOINED",
+        "LEFT"
+      ]
     },
-    "senderId": {
-      "type": "integer"
-    },
-    "textContent": {
-      "type": "string"
+    "serverInfo": {
+      "title": "ServerInfo",
+      "type": "object",
+      "required": [
+        "channelId",
+        "shadowId"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "integer"
+        },
+        "shadowId": {
+          "javaType": "java.lang.Integer",
+          "type": "integer"
+        }
+      }
     }
   }
 }
