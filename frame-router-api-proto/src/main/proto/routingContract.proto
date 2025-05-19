@@ -1,0 +1,23 @@
+syntax = "proto3";
+package ru.kotlix.frame.router.api.proto;
+
+message Ping {
+  // Пакет для поддержания подключения (hole-punching)
+}
+
+message WavePacket {
+  // Пакет аудио-данных
+  int32 order = 1;
+  bytes payload = 2;
+}
+
+message RtcPacket {
+  // Основной пакет-контейнер для отдельных пакетов
+  int32 shadow_id = 3;
+  int64 channel_id = 4;
+
+  oneof packet {
+    Ping ping = 1;
+    WavePacket wave = 2;
+  }
+}
