@@ -8,8 +8,9 @@ spring:
       max-poll-interval-ms: 10000
 
 router:
-  region: A
-  name: B
+  id:
+    region: A
+    name: B
   kafka:
     authentication:
       username: admin

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Attendant",
+  "type": "object",
+  "required": [
+    "userId",
+    "shadowId"
+  ],
+  "properties": {
+    "userId": {
+      "type": "integer"
+    },
+    "shadowId": {
+      "existingJavaType": "java.lang.Integer",
+      "type": "integer"
+    }
+  }
+}

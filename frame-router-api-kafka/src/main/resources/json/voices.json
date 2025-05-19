@@ -3,58 +3,55 @@
   "title": "VoiceNotification",
   "type": "object",
   "required": [
-    "logicalInfo",
+    "party",
     "action",
     "serverInfo"
   ],
   "properties": {
-    "logicalInfo": {
-      "title": "LogicalInfo",
+    "connectionInfo": {
+      "title": "ConnectionInfo",
       "type": "object",
       "required": [
-        "communityId",
-        "voiceId",
-        "userId"
+        "voiceRegion",
+        "voiceName",
+        "channelId"
       ],
       "properties": {
-        "communityId": {
-          "type": "integer"
+        "voiceRegion": {
+          "type": "string"
         },
-        "voiceId": {
-          "type": "integer"
+        "voiceName": {
+          "type": "string"
         },
-        "targetId": {
+        "channelId": {
           "type": "integer"
-        },
-        "listenerIds": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          }
         }
       }
     },
-    "action": {
-      "type": "string",
-      "enum": [
-        "JOINED",
-        "LEFT"
-      ]
+    "party": {
+      "type": "array",
+      "items": {
+        "$ref": "attendant.json"
+      }
     },
-    "serverInfo": {
-      "title": "ServerInfo",
+    "updateInfo": {
+      "title": "UpdateInfo",
       "type": "object",
       "required": [
-        "channelId",
-        "shadowId"
+        "voiceRegion",
+        "voiceName",
+        "channelId"
       ],
       "properties": {
-        "channelId": {
-          "type": "integer"
+        "action": {
+          "type": "string",
+          "enum": [
+            "JOINED",
+            "LEFT"
+          ]
         },
-        "shadowId": {
-          "javaType": "java.lang.Integer",
-          "type": "integer"
+        "attendant": {
+          "$ref": "attendant.json"
         }
       }
     }

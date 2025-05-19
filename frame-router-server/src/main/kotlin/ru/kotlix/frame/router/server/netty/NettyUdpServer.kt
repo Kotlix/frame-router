@@ -24,7 +24,7 @@ class NettyUdpServer(
 
     @EventListener
     fun contextStartup(event: ContextRefreshedEvent) {
-        val bossGroup = NioEventLoopGroup(nettyProperties.bossCount)
+        val bossGroup = NioEventLoopGroup(nettyProperties.workerCount)
 
         val serverBootstrap =
             Bootstrap()

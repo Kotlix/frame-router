@@ -9,7 +9,7 @@ dependencies {
     implementation("io.netty:netty-all")
 
     implementation("org.springframework:spring-context-support")
-    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-json")
     implementation("org.springframework.kafka:spring-kafka")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
