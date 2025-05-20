@@ -43,9 +43,6 @@
             "$ref": "attendant.json"
           }
         },
-        "communityId": {
-          "type": "integer"
-        },
         "voiceId": {
           "type": "integer"
         }
