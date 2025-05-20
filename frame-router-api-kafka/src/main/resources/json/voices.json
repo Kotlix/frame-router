@@ -37,21 +37,18 @@
         "voiceId"
       ],
       "properties": {
-        "voiceRegion": {
-          "type": "string"
+        "party": {
+          "type": "array",
+          "items": {
+            "$ref": "attendant.json"
+          }
         },
-        "voiceName": {
-          "type": "string"
+        "communityId": {
+          "type": "integer"
         },
-        "channelId": {
+        "voiceId": {
           "type": "integer"
         }
-      }
-    },
-    "party": {
-      "type": "array",
-      "items": {
-        "$ref": "attendant.json"
       }
     },
     "updateInfo": {
