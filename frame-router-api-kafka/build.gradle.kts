@@ -15,6 +15,7 @@ jsonSchema2Pojo {
     useLongIntegers = true
     setInclusionLevel(InclusionLevel.NON_NULL.name)
     includeJsr303Annotations = true
+    includeAdditionalProperties = false
     generateBuilders = true
     useJakartaValidation = true
     useTitleAsClassname = true
