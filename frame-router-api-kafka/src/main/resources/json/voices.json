@@ -3,8 +3,8 @@
   "title": "VoiceNotification",
   "type": "object",
   "required": [
-    "party",
-    "action",
+    "connectionInfo",
+    "voiceInfo",
     "serverInfo"
   ],
   "properties": {
@@ -28,6 +28,26 @@
         }
       }
     },
+    "voiceInfo": {
+      "title": "VoiceInfo",
+      "type": "object",
+      "required": [
+        "party",
+        "communityId",
+        "voiceId"
+      ],
+      "properties": {
+        "voiceRegion": {
+          "type": "string"
+        },
+        "voiceName": {
+          "type": "string"
+        },
+        "channelId": {
+          "type": "integer"
+        }
+      }
+    },
     "party": {
       "type": "array",
       "items": {
@@ -38,9 +58,8 @@
       "title": "UpdateInfo",
       "type": "object",
       "required": [
-        "voiceRegion",
-        "voiceName",
-        "channelId"
+        "action",
+        "attendant"
       ],
       "properties": {
         "action": {
