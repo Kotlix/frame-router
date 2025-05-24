@@ -1,5 +1,6 @@
 package ru.kotlix.frame.router.server.handler
 
+import com.google.protobuf.InvalidProtocolBufferException
 import com.google.protobuf.MessageLite
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
@@ -10,22 +11,28 @@ import io.netty.channel.socket.DatagramPacket
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import ru.kotlix.frame.router.api.proto.RoutingContract
-import ru.kotlix.frame.router.server.handler.SenderExtractor.Companion.SENDER_KEY
 import ru.kotlix.frame.router.server.service.ChannelRegistry
+import java.net.InetSocketAddress
 
 @Component
 @ChannelHandler.Sharable
-class RtcPacketHandler(
+class DatagramPacketHandler(
     private val channelRegistry: ChannelRegistry,
-) : SimpleChannelInboundHandler<RoutingContract.RtcPacket>() {
+) : SimpleChannelInboundHandler<DatagramPacket>() {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun channelRead0(
         ctx: ChannelHandlerContext?,
-        msg: RoutingContract.RtcPacket?,
+        msg: DatagramPacket?,
     ) {
         val context = ctx ?: return
-        val packet = msg ?: return
+        val pkt = msg ?: return
+        val packet = try {
+            RoutingContract.RtcPacket.parseFrom(pkt.content().nioBuffer())
+        } catch (ex: InvalidProtocolBufferException) {
+            logger.warn("Received bad RtcPacket.")
+            return
+        }
 
         val entry = channelRegistry.get(packet.channelId, packet.shadowId)
         if (entry == null) {
@@ -33,33 +40,32 @@ class RtcPacketHandler(
             return
         }
 
-        cacheSenderAddress(context, entry)
+        val sender = pkt.sender()
+        cacheSenderAddress(sender, entry)
         if (packet.hasWave()) {
             logger.debug("Received wave packet.")
-            routeWavePacket(context, packet)
+            routeWavePacket(sender, context, packet)
         } else {
             logger.debug("Received ping packet.")
         }
     }
 
     private fun cacheSenderAddress(
-        context: ChannelHandlerContext,
+        sender: InetSocketAddress,
         entry: ChannelRegistry.Entry,
     ) {
-        val sender = context.channel().attr(SENDER_KEY).get()
-        if (sender == null) {
-            logger.error("Datagram sender not provided.")
-            return
-        }
         entry.lastAddress = sender
     }
 
     private fun routeWavePacket(
+        sender: InetSocketAddress,
         context: ChannelHandlerContext,
         packet: RoutingContract.RtcPacket,
     ) {
         channelRegistry.get(packet.channelId).forEach { (_, v) ->
             val recipient = v ?: return@forEach
+            if (recipient == sender) return@forEach
+
             val encodedPacket = encodeProto(packet)
             if (encodedPacket == null) {
                 logger.error("Unable to encode proto.")

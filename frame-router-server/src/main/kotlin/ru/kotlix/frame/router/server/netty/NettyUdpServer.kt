@@ -10,11 +10,12 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import ru.kotlix.frame.router.server.config.props.NettyProperties
+import ru.kotlix.frame.router.server.handler.DatagramPacketHandler
 
 @Component
 class NettyUdpServer(
     private val nettyProperties: NettyProperties,
-    private val channelInitializer: DatagramPipeline,
+    private val datagramPacketHandler: DatagramPacketHandler,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -24,13 +25,13 @@ class NettyUdpServer(
 
     @EventListener
     fun contextStartup(event: ContextRefreshedEvent) {
-        val bossGroup = NioEventLoopGroup(nettyProperties.workerCount)
+        val workerGroup = NioEventLoopGroup(nettyProperties.workerCount)
 
         val serverBootstrap =
             Bootstrap()
-                .group(bossGroup)
+                .group(workerGroup)
                 .channel(NioDatagramChannel::class.java)
-                .handler(channelInitializer)
+                .handler(datagramPacketHandler)
         val serverPort = nettyProperties.port
 
         val serverChannelFuture = serverBootstrap.bind(serverPort).sync()
@@ -45,7 +46,7 @@ class NettyUdpServer(
                     } catch (ex: Exception) {
                         logger.error("Error happened during netty server startup.", ex)
                     } finally {
-                        bossGroup.shutdownGracefully()
+                        workerGroup.shutdownGracefully()
                         logger.info("Netty server stopped.")
                     }
                 }.apply {
